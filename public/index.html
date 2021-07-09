@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html><head>
+  <title>Todo Lists</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="stylesheets/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <!-- <script src="javascripts/todo_v3.js"></script> -->
+  <script src="javascripts/handlebars.js"></script>
+</head>
+<body>
+  <input type="checkbox" id="sidebar_toggle">
+  <div id="sidebar">
+    <section id="all">
+      <div id="all_todos">
+        
+            <header data-title="All Todos" data-total="4" id="all_header" class="active">
+              <dl>
+               <dt>All Todos</dt><!--
+              --><dd>4</dd>
+              </dl>
+            </header>
+                </div>
+      <article id="all_lists">
+        
+              <dl data-title="No Due Date" data-total="2">
+                <dt><time>No Due Date</time></dt>
+                <dd>2</dd>
+              </dl>
+              <dl data-title="08/18" data-total="1">
+                <dt><time>08/18</time></dt>
+                <dd>1</dd>
+              </dl>
+              <dl data-title="04/19" data-total="1">
+                <dt><time>04/19</time></dt>
+                <dd>1</dd>
+              </dl>
+                </article>
+    </section>
+    <section class="completed" id="completed_items">
+      <div id="completed_todos">
+        
+            <header data-title="Completed" data-total="4" id="all_done_header">
+              <dl>
+               <dt>Completed</dt><!--
+              --><dd>4</dd>
+              </dl>
+            </header>
+                </div>
+      <article id="completed_lists">
+        
+              <dl data-title="No Due Date" data-total="2" id="No Due Date">
+                <dt><time>No Due Date</time></dt>
+                <dd>2</dd>
+              </dl>
+              <dl data-title="08/18" data-total="1" id="08/18">
+                <dt><time>08/18</time></dt>
+                <dd>1</dd>
+              </dl>
+              <dl data-title="04/19" data-total="1" id="04/19">
+                <dt><time>04/19</time></dt>
+                <dd>1</dd>
+              </dl>
+                </article>
+    </section>
+  </div>
+  <div id="items">
+    <header>
+   <label for="sidebar_toggle">
+     <img src="images/hamburger.png" alt="Toggle Sidebar">
+   </label>
+   <dl>
+     <dt><time>All Todos</time></dt><!--
+  --><dd>4</dd>
+   </dl>
+  </header>
+    <main>
+      <label for="new_item">
+        <img src="images/plus.png" alt="Add Todo Item">
+        <h2>Add new to do</h2>
+      </label>
+      <table cellspacing="0">
+        <tbody>
+          
+              
+                  <tr data-id="2">
+                    <td class="list_item">
+                    <input type="checkbox" name="item_2" id="item_2" checked="">
+                    <span class="check"></span>
+                    <label for="item_2">Veep - 04/19</label></td>
+                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+                  </tr>
+                    
+                  <tr data-id="3">
+                    <td class="list_item">
+                    <input type="checkbox" name="item_3" id="item_3" checked="">
+                    <span class="check"></span>
+                    <label for="item_3">Veep - 08/18</label></td>
+                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+                  </tr>
+                    
+                  <tr data-id="4">
+                    <td class="list_item">
+                    <input type="checkbox" name="item_4" id="item_4" checked="">
+                    <span class="check"></span>
+                    <label for="item_4">test - No Due Date</label></td>
+                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+                  </tr>
+                    
+                  <tr data-id="5">
+                    <td class="list_item">
+                    <input type="checkbox" name="item_5" id="item_5" checked="">
+                    <span class="check"></span>
+                    <label for="item_5">test - No Due Date</label></td>
+                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+                  </tr>
+                          </tbody>
+      </table>
+        <div class="modal" id="modal_layer"></div>
+        <div class="modal" id="form_modal">
+          <form action="" method="post">
+            <fieldset>
+              <ul>
+                <li>
+                  <label for="title">Title</label>
+                  <input type="text" name="title" id="title" placeholder="Item 1">
+                </li>
+                <li>
+                  <label for="due">Due Date</label>
+                  <div class="date">
+                    <select id="due_day" name="due_day">
+                      <option>Day</option>
+                      <option value="01">1</option>
+                      <option value="02">2</option>
+                      <option value="03">3</option>
+                      <option value="04">4</option>
+                      <option value="05">5</option>
+                      <option value="06">6</option>
+                      <option value="07">7</option>
+                      <option value="08">8</option>
+                      <option value="09">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                      <option value="21">21</option>
+                      <option value="22">22</option>
+                      <option value="23">23</option>
+                      <option value="24">24</option>
+                      <option value="25">25</option>
+                      <option value="26">26</option>
+                      <option value="27">27</option>
+                      <option value="28">28</option>
+                      <option value="29">29</option>
+                      <option value="30">30</option>
+                      <option value="31">31</option>
+                    </select>  /
+                    <select id="due_month" name="due_month">
+                      <option>Month</option>
+                      <option value="01">January</option>
+                      <option value="02">February</option>
+                      <option value="03">March</option>
+                      <option value="04">April</option>
+                      <option value="05">May</option>
+                      <option value="06">June</option>
+                      <option value="07">July</option>
+                      <option value="08">August</option>
+                      <option value="09">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select> /
+                    <select id="due_year" name="due_year" placeholder="year">
+                      <option>Year</option>
+                      <option>2014</option>
+                      <option>2015</option>
+                      <option>2016</option>
+                      <option>2017</option>
+                      <option>2018</option>
+                      <option>2019</option>
+                      <option>2020</option>
+                      <option>2021</option>
+                      <option>2022</option>
+                      <option>2023</option>
+                      <option>2024</option>
+                      <option>2025</option>
+                    </select>
+                  </div>
+                </li>
+                <li>
+                  <label for="description">Description</label>
+                  <textarea cols="50" name="description" rows="7" placeholder="Description"></textarea>
+                </li>
+                <li>
+                  <input type="submit" value="Save">
+                  <button name="complete">Mark As Complete</button>
+                </li>
+              </ul>
+            </fieldset>
+          </form>
+        </div>
+    </main>
+  </div>
+  </body>
+  <script type="module" src="/javascripts/main.js"></script>
+  </html>

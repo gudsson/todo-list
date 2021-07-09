@@ -1,0 +1,4 @@
+export class ContactModel {
+  constructor() {
+  }
+}
