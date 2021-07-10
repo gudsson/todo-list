@@ -1,212 +1,191 @@
 <!DOCTYPE html>
-<html><head>
-  <title>Todo Lists</title>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="stylesheets/main.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <!-- <script src="javascripts/todo_v3.js"></script> -->
-  <script src="javascripts/handlebars.js"></script>
-</head>
-<body>
-  <input type="checkbox" id="sidebar_toggle">
-  <div id="sidebar">
-    <section id="all">
-      <div id="all_todos">
-        
-            <header data-title="All Todos" data-total="4" id="all_header" class="active">
-              <dl>
-               <dt>All Todos</dt><!--
-              --><dd>4</dd>
-              </dl>
-            </header>
-                </div>
-      <article id="all_lists">
-        
-              <dl data-title="No Due Date" data-total="2">
-                <dt><time>No Due Date</time></dt>
-                <dd>2</dd>
-              </dl>
-              <dl data-title="08/18" data-total="1">
-                <dt><time>08/18</time></dt>
-                <dd>1</dd>
-              </dl>
-              <dl data-title="04/19" data-total="1">
-                <dt><time>04/19</time></dt>
-                <dd>1</dd>
-              </dl>
-                </article>
-    </section>
-    <section class="completed" id="completed_items">
-      <div id="completed_todos">
-        
-            <header data-title="Completed" data-total="4" id="all_done_header">
-              <dl>
-               <dt>Completed</dt><!--
-              --><dd>4</dd>
-              </dl>
-            </header>
-                </div>
-      <article id="completed_lists">
-        
-              <dl data-title="No Due Date" data-total="2" id="No Due Date">
-                <dt><time>No Due Date</time></dt>
-                <dd>2</dd>
-              </dl>
-              <dl data-title="08/18" data-total="1" id="08/18">
-                <dt><time>08/18</time></dt>
-                <dd>1</dd>
-              </dl>
-              <dl data-title="04/19" data-total="1" id="04/19">
-                <dt><time>04/19</time></dt>
-                <dd>1</dd>
-              </dl>
-                </article>
-    </section>
-  </div>
-  <div id="items">
-    <header>
-   <label for="sidebar_toggle">
-     <img src="images/hamburger.png" alt="Toggle Sidebar">
-   </label>
-   <dl>
-     <dt><time>All Todos</time></dt><!--
-  --><dd>4</dd>
-   </dl>
-  </header>
-    <main>
-      <label for="new_item">
-        <img src="images/plus.png" alt="Add Todo Item">
-        <h2>Add new to do</h2>
-      </label>
-      <table cellspacing="0">
-        <tbody>
-          
-              
-                  <tr data-id="2">
-                    <td class="list_item">
-                    <input type="checkbox" name="item_2" id="item_2" checked="">
-                    <span class="check"></span>
-                    <label for="item_2">Veep - 04/19</label></td>
-                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
-                  </tr>
-                    
-                  <tr data-id="3">
-                    <td class="list_item">
-                    <input type="checkbox" name="item_3" id="item_3" checked="">
-                    <span class="check"></span>
-                    <label for="item_3">Veep - 08/18</label></td>
-                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
-                  </tr>
-                    
-                  <tr data-id="4">
-                    <td class="list_item">
-                    <input type="checkbox" name="item_4" id="item_4" checked="">
-                    <span class="check"></span>
-                    <label for="item_4">test - No Due Date</label></td>
-                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
-                  </tr>
-                    
-                  <tr data-id="5">
-                    <td class="list_item">
-                    <input type="checkbox" name="item_5" id="item_5" checked="">
-                    <span class="check"></span>
-                    <label for="item_5">test - No Due Date</label></td>
-                    <td class="delete"><img src="images/trash.png" alt="Delete"></td>
-                  </tr>
-                          </tbody>
-      </table>
-        <div class="modal" id="modal_layer"></div>
-        <div class="modal" id="form_modal">
-          <form action="" method="post">
-            <fieldset>
-              <ul>
-                <li>
-                  <label for="title">Title</label>
-                  <input type="text" name="title" id="title" placeholder="Item 1">
-                </li>
-                <li>
-                  <label for="due">Due Date</label>
-                  <div class="date">
-                    <select id="due_day" name="due_day">
-                      <option>Day</option>
-                      <option value="01">1</option>
-                      <option value="02">2</option>
-                      <option value="03">3</option>
-                      <option value="04">4</option>
-                      <option value="05">5</option>
-                      <option value="06">6</option>
-                      <option value="07">7</option>
-                      <option value="08">8</option>
-                      <option value="09">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
-                      <option value="13">13</option>
-                      <option value="14">14</option>
-                      <option value="15">15</option>
-                      <option value="16">16</option>
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                      <option value="21">21</option>
-                      <option value="22">22</option>
-                      <option value="23">23</option>
-                      <option value="24">24</option>
-                      <option value="25">25</option>
-                      <option value="26">26</option>
-                      <option value="27">27</option>
-                      <option value="28">28</option>
-                      <option value="29">29</option>
-                      <option value="30">30</option>
-                      <option value="31">31</option>
-                    </select>  /
-                    <select id="due_month" name="due_month">
-                      <option>Month</option>
-                      <option value="01">January</option>
-                      <option value="02">February</option>
-                      <option value="03">March</option>
-                      <option value="04">April</option>
-                      <option value="05">May</option>
-                      <option value="06">June</option>
-                      <option value="07">July</option>
-                      <option value="08">August</option>
-                      <option value="09">September</option>
-                      <option value="10">October</option>
-                      <option value="11">November</option>
-                      <option value="12">December</option>
-                    </select> /
-                    <select id="due_year" name="due_year" placeholder="year">
-                      <option>Year</option>
-                      <option>2014</option>
-                      <option>2015</option>
-                      <option>2016</option>
-                      <option>2017</option>
-                      <option>2018</option>
-                      <option>2019</option>
-                      <option>2020</option>
-                      <option>2021</option>
-                      <option>2022</option>
-                      <option>2023</option>
-                      <option>2024</option>
-                      <option>2025</option>
-                    </select>
-                  </div>
-                </li>
-                <li>
-                  <label for="description">Description</label>
-                  <textarea cols="50" name="description" rows="7" placeholder="Description"></textarea>
-                </li>
-                <li>
-                  <input type="submit" value="Save">
-                  <button name="complete">Mark As Complete</button>
-                </li>
-              </ul>
-            </fieldset>
-          </form>
+<html>
+  <head>
+    <title>Todo Lists</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- <script src="javascripts/todo_v3.js"></script> -->
+    <script src="javascripts/handlebars.js"></script>
+  </head>
+
+  <body>
+    <input type="checkbox" id="sidebar_toggle">
+    <div id="sidebar">
+      <section id="all">
+        <div id="all_todos">
+          <header data-title="All Todos" data-total="" id="all_header" class="active">
+            <dl>
+            <dt>All Todos</dt><dd></dd>
+            </dl>
+          </header>
         </div>
-    </main>
-  </div>
+        <article id="all_lists"></article>
+      </section>
+      <section class="completed" id="completed_items">
+        <div id="completed_todos">
+          <header data-title="Completed" data-total="" id="all_done_header">
+            <dl>
+              <dt>Completed</dt><dd></dd>
+            </dl>
+          </header>
+        </div>
+        <article id="completed_lists">
+          <dl data-title="02/15" data-total="1" id="02/15">
+            <dt><time>02/15</time></dt>
+            <dd>1</dd>
+          </dl>
+        </article>
+      </section>
+    </div>
+
+    <div id="items">
+      <header>
+        <label for="sidebar_toggle">
+          <img src="images/hamburger.png" alt="Toggle Sidebar">
+        </label>
+        <dl>
+            <dt><time>All Todos</time></dt><dd>4</dd>
+        </dl>
+      </header>
+      <main>
+        <label for="new_item">
+          <img src="images/plus.png" alt="Add Todo Item">
+          <h2>Add new to do</h2>
+        </label>
+        <table cellspacing="0">
+          <tbody>
+            <tr data-id="2">
+              <td class="list_item">
+              <input type="checkbox" name="item_2" id="item_2" checked="">
+              <span class="check"></span>
+              <label for="item_2">Veep - 04/19</label></td>
+              <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="modal" id="modal_layer"></div>
+        <div class="modal" id="form_modal"></div>
+      </main>
+    </div>
   </body>
+
+  <!-- Handlebars Templates -->
+  <!-- Modal Templates (TODO: Refactor) -->
+  <script id='dayOptions' type='text/x-handlebars'>
+    <option>Day</option>
+    <option value="01" {{#if (isSelected "01" day)}} selected {{/if}}>1</option>
+    <option value="02" {{#if (isSelected "02" day)}} selected {{/if}}>2</option>
+    <option value="03" {{#if (isSelected "03" day)}} selected {{/if}}>3</option>
+    <option value="04" {{#if (isSelected "04" day)}} selected {{/if}}>4</option>
+    <option value="05" {{#if (isSelected "05" day)}} selected {{/if}}>5</option>
+    <option value="06" {{#if (isSelected "06" day)}} selected {{/if}}>6</option>
+    <option value="07" {{#if (isSelected "07" day)}} selected {{/if}}>7</option>
+    <option value="08" {{#if (isSelected "08" day)}} selected {{/if}}>8</option>
+    <option value="09" {{#if (isSelected "09" day)}} selected {{/if}}>9</option>
+    <option value="10" {{#if (isSelected "10" day)}} selected {{/if}}>10</option>
+    <option value="11" {{#if (isSelected "11" day)}} selected {{/if}}>11</option>
+    <option value="12" {{#if (isSelected "12" day)}} selected {{/if}}>12</option>
+    <option value="13" {{#if (isSelected "13" day)}} selected {{/if}}>13</option>
+    <option value="14" {{#if (isSelected "14" day)}} selected {{/if}}>14</option>
+    <option value="15" {{#if (isSelected "15" day)}} selected {{/if}}>15</option>
+    <option value="16" {{#if (isSelected "16" day)}} selected {{/if}}>16</option>
+    <option value="17" {{#if (isSelected "17" day)}} selected {{/if}}>17</option>
+    <option value="18" {{#if (isSelected "18" day)}} selected {{/if}}>18</option>
+    <option value="19" {{#if (isSelected "19" day)}} selected {{/if}}>19</option>
+    <option value="20" {{#if (isSelected "20" day)}} selected {{/if}}>20</option>
+    <option value="21" {{#if (isSelected "21" day)}} selected {{/if}}>21</option>
+    <option value="22" {{#if (isSelected "22" day)}} selected {{/if}}>22</option>
+    <option value="23" {{#if (isSelected "23" day)}} selected {{/if}}>23</option>
+    <option value="24" {{#if (isSelected "24" day)}} selected {{/if}}>24</option>
+    <option value="25" {{#if (isSelected "25" day)}} selected {{/if}}>25</option>
+    <option value="26" {{#if (isSelected "26" day)}} selected {{/if}}>26</option>
+    <option value="27" {{#if (isSelected "27" day)}} selected {{/if}}>27</option>
+    <option value="28" {{#if (isSelected "28" day)}} selected {{/if}}>28</option>
+    <option value="29" {{#if (isSelected "29" day)}} selected {{/if}}>29</option>
+    <option value="30" {{#if (isSelected "30" day)}} selected {{/if}}>30</option>
+    <option value="31" {{#if (isSelected "31" day)}} selected {{/if}}>31</option>
+  </script>
+
+  <script id='monthOptions' type='text/x-handlebars'>
+    <option>Month</option>
+    <option value="01" {{#if (isSelected "01" month)}} selected {{/if}}>January</option>
+    <option value="02" {{#if (isSelected "02" month)}} selected {{/if}}>February</option>
+    <option value="03" {{#if (isSelected "03" month)}} selected {{/if}}>March</option>
+    <option value="04" {{#if (isSelected "04" month)}} selected {{/if}}>April</option>
+    <option value="05" {{#if (isSelected "05" month)}} selected {{/if}}>May</option>
+    <option value="06" {{#if (isSelected "06" month)}} selected {{/if}}>June</option>
+    <option value="07" {{#if (isSelected "07" month)}} selected {{/if}}>July</option>
+    <option value="08" {{#if (isSelected "08" month)}} selected {{/if}}>August</option>
+    <option value="09" {{#if (isSelected "09" month)}} selected {{/if}}>September</option>
+    <option value="10" {{#if (isSelected "10" month)}} selected {{/if}}>October</option>
+    <option value="11" {{#if (isSelected "11" month)}} selected {{/if}}>November</option>
+    <option value="12" {{#if (isSelected "12" month)}} selected {{/if}}>December</option>
+  </script>
+
+  <script id='yearOptions' type='text/x-handlebars'>
+    <option>Year</option>
+    <option value="2021" {{#if (isSelected "2021" year)}} selected {{/if}}>2021</option>
+    <option value="2022" {{#if (isSelected "2022" year)}} selected {{/if}}>2022</option>
+    <option value="2023" {{#if (isSelected "2023" year)}} selected {{/if}}>2023</option>
+    <option value="2024" {{#if (isSelected "2024" year)}} selected {{/if}}>2024</option>
+    <option value="2025" {{#if (isSelected "2025" year)}} selected {{/if}}>2025</option>
+    <option value="2026" {{#if (isSelected "2026" year)}} selected {{/if}}>2026</option>
+    <option value="2027" {{#if (isSelected "2027" year)}} selected {{/if}}>2027</option>
+    <option value="2028" {{#if (isSelected "2028" year)}} selected {{/if}}>2028</option>
+    <option value="2029" {{#if (isSelected "2029" year)}} selected {{/if}}>2029</option>
+    <option value="2030" {{#if (isSelected "2030" year)}} selected {{/if}}>2030</option>
+    <option value="2031" {{#if (isSelected "2031" year)}} selected {{/if}}>2031</option>
+    <option value="2032" {{#if (isSelected "2032" year)}} selected {{/if}}>2032</option>
+  </script>
+  
+  <script id='modalForm' type='text/x-handlebars'>
+    <form action="" method="post">
+      <fieldset>
+        <ul>
+          <li>
+            <label for="title">Title</label>
+            <input type="hidden" name="id" id="id" value="{{id}}">
+            <input type="text" name="title" id="title" placeholder="Item 1" value="{{title}}">
+          </li>
+          <li>
+            <label for="due">Due Date</label>
+            <div class="date">
+              <select id="due_day" name="due_day">
+                {{> dayOptions value=day}}
+              </select>  /
+              <select id="due_month" name="due_month">
+                {{> monthOptions value=month}}
+              </select> /
+              <select id="due_year" name="due_year" placeholder="year">
+                {{> yearOptions value=year}}
+              </select>
+            </div>
+          </li>
+          <li>
+            <label for="description">Description</label>
+            <textarea cols="50" name="description" rows="7" placeholder="Description">{{description}}</textarea>
+          </li>
+          <li>
+            <input type="submit" value="Save">
+            <button name="complete">Mark As Complete</button>
+          </li>
+        </ul>
+      </fieldset>
+    </form>
+  </script>
+
+  <!-- Sidebar Templates -->
+  <script id='sidebarList' type='text/x-handlebars'>
+    {{#each dateGroups}}
+    <dl data-title="{{this}}" data-total="">
+      <dt><time>{{this}}</time></dt>
+      <dd></dd>
+    </dl>
+    {{/each}}
+  </script>
+
+  <!-- Item Container Templates -->
+
   <script type="module" src="/javascripts/main.js"></script>
-  </html>
+</html>

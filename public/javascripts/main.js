@@ -1,7 +1,7 @@
 import { App } from './controller.js'
 
 $(() => {
-  // let app = new App();
+  let app = new App();
   // app.init();
-  alert('hello!');
+  // alert('hello!');
 });
