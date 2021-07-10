@@ -18,13 +18,16 @@ export class TodoModel {
     this.read('/api/reset');
   }
 
-  async post(method, action, formData) {
+  async submit(method, formData) {
+    let id = formData.get('id');
     let requestObj = {
       method: method,
       ...this.defaultHeaderObj,
       body: JSON.stringify(Object.fromEntries(formData)),
     }
-    return await fetch(action, requestObj);
+    // console.log(`${this.path}${id ? id : ''}`);
+    // console.log(requestObj);
+    return await fetch(`${this.path}${id ? id : ''}`, requestObj);
   }
 
   async delete(id) {
