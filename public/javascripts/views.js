@@ -24,6 +24,11 @@ export class TodoView {
 
     // this.allListsPartial = Handlebars.compile($('#allListsPartial').html());
     // Handlebars.registerPartial('allListsPartial', $('#allListsPartial').html());
+    this.todoListHeader = Handlebars.compile($('#todoListHeader').html()); // don't need if not passing anything to template
+    Handlebars.registerPartial('todoListHeader', $('#todoListHeader').html());
+
+    this.todoTemplate = Handlebars.compile($('#todoListHeader').html());
+    Handlebars.registerPartial('todoTemplate', $('#todoTemplate').html());
 
     this.dayOptions = Handlebars.compile($('#dayOptions').html());
     Handlebars.registerPartial('dayOptions', $('#dayOptions').html());
@@ -42,7 +47,7 @@ export class TodoView {
     this.todoCompletedGroups = this.groupTodosByDate(this.todosCompleted);
 
     this.loadSidebar();
-    this.loadTodoList();
+    this.loadTodoList({ listTitle: 'All Todos', todos: this.sortTodosByStatus(todos) });
   }
 
   loadSidebar() {
@@ -51,8 +56,8 @@ export class TodoView {
     this.updateItemCounts();
   }
 
-  loadTodoList() {
-    this.$todoListContainer.html(this.todoListTemplate());//{});
+  loadTodoList(listObj) {
+    this.$todoListContainer.html(this.todoListTemplate(listObj));
   }
 
   updateItemCounts() {
@@ -138,5 +143,41 @@ export class TodoView {
 
   hideModal() {
     this.$modal.fadeOut('slow');
+  }
+
+  clearSidebarButtons() {
+    this.$sidebar.find('header, dl').removeClass('active');
+  }
+  
+  displayList($listButton) {
+    let todos = this.sortTodosByStatus(this.getTodosByList($listButton));
+
+    this.selectSidebarButton($listButton);
+    this.loadTodoList({ listTitle: $listButton.data('title'), todos: todos });
+
+  }
+
+  getListType($pressedBtn) {
+    return $pressedBtn.closest('section').attr('id');
+  }
+
+  selectSidebarButton($pressedButton) {
+    this.clearSidebarButtons();
+    $pressedButton.addClass('active');
+  }
+
+  getTodosByList($pressedBtn) {
+    let listName = $pressedBtn.data('title')
+    let listType = this.getListType($pressedBtn);
+
+    if ($pressedBtn.prop('tagName') === 'HEADER') {
+      return listType === 'all' ? this.todos : this.todosCompleted;
+    }
+
+    return listType === 'all' ? this.todoGroups[listName] : this.todoCompletedGroups[listName];
+  }
+
+  sortTodosByStatus(todoArr) {
+    return todoArr.sort((a, b) => a.completed - b.completed);
   }
 }

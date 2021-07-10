@@ -35,6 +35,8 @@
     </div>
 
     <div id="items"></div>
+    <div class="modal" id="modal_layer"></div>
+    <div class="modal" id="form_modal"></div>
   </body>
 
   <!-- Handlebars Templates -->
@@ -155,14 +157,7 @@
 
   <!-- TodoList Templates -->
   <script id='todoListTemplate' type='text/x-handlebars'>
-    <header>
-      <label for="sidebar_toggle">
-        <img src="images/hamburger.png" alt="Toggle Sidebar">
-      </label>
-      <dl>
-        <dt><time>All Todos</time></dt><dd>4</dd>
-      </dl>
-    </header>
+    {{> todoListHeader}}
     <main>
       <label for="new_item">
         <img src="images/plus.png" alt="Add Todo Item">
@@ -170,19 +165,33 @@
       </label>
       <table cellspacing="0">
         <tbody>
-          <tr data-id="2">
-            <td class="list_item">
-            <input type="checkbox" name="item_2" id="item_2" checked="">
-            <span class="check"></span>
-            <label for="item_2">Veep - 04/19</label></td>
-            <td class="delete"><img src="images/trash.png" alt="Delete"></td>
-          </tr>
+          {{#each todos}}
+          {{> todoTemplate}}
+          {{/each}}
         </tbody>
       </table>
-      <div class="modal" id="modal_layer"></div>
-      <div class="modal" id="form_modal"></div>
     </main>
   </script>
 
+  <script id='todoListHeader' type='text/x-handlebars'>
+    <header>
+      <label for="sidebar_toggle">
+        <img src="images/hamburger.png" alt="Toggle Sidebar">
+      </label>
+      <dl>
+        <dt><time>{{listTitle}}</time></dt><dd>{{todos.length}}</dd>
+      </dl>
+    </header>
+  </script>
+
+  <script id='todoTemplate' type='text/x-handlebars'>
+    <tr data-id="{{id}}">
+      <td class="list_item">
+      <input type="checkbox" name="item_{{id}}" id="item_{{id}}" {{#if completed}}checked{{/if}}>
+      <span class="check"></span>
+      <label for="item_{{id}}">{{title}}</label></td>
+      <td class="delete"><img src="images/trash.png" alt="Delete"></td>
+    </tr>
+  </script>
   <script type="module" src="/javascripts/main.js"></script>
 </html>

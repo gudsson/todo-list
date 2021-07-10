@@ -1,0 +1,5 @@
+let arr = [{"id":1,"title":"todo1","completed":true,"day":"09","month":"07","year":"2025","description":"finish your app"},{"id":2,"title":"todo2","completed":false,"day":"09","month":"07","year":"2025","description":"finish your app2"},{"id":3,"title":"todo3","completed":true,"day":"","month":"","year":"","description":""},{"id":4,"title":"123","completed":false,"day":"","month":"","year":"","description":""},{"id":5,"title":"123","completed":false,"day":"","month":"","year":"","description":""},{"id":6,"title":"1234","completed":false,"day":"","month":"","year":"","description":""},{"id":7,"title":"12345","completed":false,"day":"","month":"","year":"","description":""},{"id":8,"title":"1232456","completed":false,"day":"01","month":"01","year":"2021","description":""},{"id":9,"title":"123456789","completed":false,"day":"","month":"","year":"","description":""}];
+
+arr.sort((a, b) => a.completed - b.completed);
+
+console.log(arr);
