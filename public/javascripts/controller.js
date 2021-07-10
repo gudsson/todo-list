@@ -7,7 +7,7 @@ export class App {
     this.api = new TodoModel();
     this.view = new TodoView();
     this.getTodos();
-    this.addListeners();
+    // this.addListeners();
     // this.api.falsePut(3);
     // this.test();
   }
@@ -21,6 +21,7 @@ export class App {
 
   loadPage() {
     this.view.loadPage(this.todos);
+    this.addListeners();
   }
 
   addListeners() {
@@ -34,8 +35,13 @@ export class App {
   }
 
   addNewTodoBtnListener() {
-    $('label[for="new_item"]').on('click', e => {
-      this.view.loadTodoForm();
+    $('#items').on('click', e => {
+      e.preventDefault();
+      // console.log($(e.target).closest('label').attr('for'))
+      if ($(e.target).closest('label').attr('for') === 'new_item') {
+        console.log('hello');
+        this.view.loadTodoForm();
+      }
     });
   }
 
@@ -49,7 +55,7 @@ export class App {
 
     $('#modal_layer').on('click', e => {
       this.view.hideModal();
-    })
+    });
   }
 
   checkForSaveClick(event) {

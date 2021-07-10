@@ -1,14 +1,16 @@
 export class TodoView {
   constructor() {
     this.$main = $('main');
-    this.$modal = $('.modal');
-    this.$formModal = $('#form_modal');
+    // this.$modal = $('.modal');
+    // this.$formModal = $('#form_modal');
     this.$sidebar = $('#sidebar');
-    this.$ListContainer = $('#all_lists');
-    this.$completedListContainer = $('#completed_lists');
+    this.$dateListContainer = $('#all_lists');
+    this.$completedDateListContainer = $('#completed_lists');
+    this.$todoListContainer = $('#items');
     // this.modal = Handlebars.compile($('#modal').html());
     this.form = Handlebars.compile($('#modalForm').html());
     this.sidebarList = Handlebars.compile($('#sidebarList').html());
+    this.todoListTemplate = Handlebars.compile($('#todoListTemplate').html());
 
     // this.sidebarTemplate = Handlebars.compile($('#sidebarTemplate').html());
     // // this.optionTemplate = Handlebars.compile($('#optionTemplate').html());
@@ -40,12 +42,17 @@ export class TodoView {
     this.todoCompletedGroups = this.groupTodosByDate(this.todosCompleted);
 
     this.loadSidebar();
+    this.loadTodoList();
   }
 
   loadSidebar() {
     this.loadAllTodosDates();
     this.loadAllCompletedTodosDates();
     this.updateItemCounts();
+  }
+
+  loadTodoList() {
+    this.$todoListContainer.html(this.todoListTemplate());//{});
   }
 
   updateItemCounts() {
@@ -56,11 +63,11 @@ export class TodoView {
   }
 
   loadAllTodosDates() {
-    this.$ListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoGroups)}));
+    this.$dateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoGroups)}));
   }
 
   loadAllCompletedTodosDates() {
-    this.$completedListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoCompletedGroups)}));
+    this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoCompletedGroups)}));
   }
 
   getSortedDateKeys(dates) {
@@ -90,11 +97,11 @@ export class TodoView {
   }
 
   updateAllListCounts() {
-    this.updateListCount(this.$ListContainer, this.todoGroups);
+    this.updateListCount(this.$dateListContainer, this.todoGroups);
   }
 
   updateCompletedListCounts() {
-    this.updateListCount(this.$completedListContainer, this.todoCompletedGroups);
+    this.updateListCount(this.$completedDateListContainer, this.todoCompletedGroups);
   }
 
   groupTodosByDate(todos) {
@@ -116,7 +123,8 @@ export class TodoView {
   }
 
   loadTodoForm(data = {}) {
-    this.$formModal.html(this.form(data));
+    $('#form_modal').html(this.form(data));
+    this.$modal = $('.modal');
     this.showModal();
   }
 
