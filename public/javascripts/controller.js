@@ -8,7 +8,7 @@ export class App {
     this.view = new TodoView();
     this.getTodos();
     this.addListeners();
-    this.api.falsePut(1);
+    // this.api.falsePut(3);
     // this.test();
   }
 

@@ -4,8 +4,8 @@ export class TodoView {
     this.$modal = $('.modal');
     this.$formModal = $('#form_modal');
     this.$sidebar = $('#sidebar');
-    this.$dateListContainer = $('#all_lists'); //maybe just use in method
-    this.$completedDateListContainer = $('#completed_lists'); //maybe just use in method
+    this.$ListContainer = $('#all_lists');
+    this.$completedListContainer = $('#completed_lists');
     // this.modal = Handlebars.compile($('#modal').html());
     this.form = Handlebars.compile($('#modalForm').html());
     this.sidebarList = Handlebars.compile($('#sidebarList').html());
@@ -31,9 +31,6 @@ export class TodoView {
 
     this.yearOptions = Handlebars.compile($('#yearOptions').html());
     Handlebars.registerPartial('yearOptions', $('#yearOptions').html());
-
-    // this.initializePage();
-
   }
   
   loadPage(todos) {
@@ -43,71 +40,62 @@ export class TodoView {
     this.todoCompletedGroups = this.groupTodosByDate(this.todosCompleted);
 
     this.loadSidebar();
+  }
 
+  loadSidebar() {
+    this.loadAllTodosDates();
+    this.loadAllCompletedTodosDates();
     this.updateItemCounts();
   }
 
   updateItemCounts() {
     this.updateAllItemCount();
-    this.updateAllGroupCounts();
     this.updateCompletedItemCount();
-  }
-
-  loadSidebar() {
-    this.loadAllTodosDates();
-    this.loadAllCompletedTodosDates
-    this.updateItemCounts();
-
-    
+    this.updateAllListCounts();
+    this.updateCompletedListCounts();
   }
 
   loadAllTodosDates() {
-    this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateGroups()}));
+    this.$ListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoGroups)}));
   }
 
   loadAllCompletedTodosDates() {
-    // this.$dateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateGroups()}));
+    this.$completedListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoCompletedGroups)}));
   }
 
-  getSortedDateGroups() {
-    return Object.keys(this.todoGroups).sort((a, b) => +a.replace(/\D/g, '') - +b.replace(/\D/g, ''));
-  }
-
-  updateAllGroupCounts() {
-    let $dlTags = this.$dateListContainer.find('dl');
-
-    $dlTags.each((_, element) => {
-      let dateGroup = $(element).attr('data-title'); 
-      this.updateCount($(element), this.todoGroups[dateGroup]);
-    });
+  getSortedDateKeys(dates) {
+    return Object.keys(dates).sort((a, b) => +a.replace(/\D/g, '') - +b.replace(/\D/g, ''));
   }
 
   updateAllItemCount() {
-    this.updateCount($('#all_header'), this.todos);
+    this.updateItemCount($('#all_header'), this.todos);
   }
 
   updateCompletedItemCount() {
-    this.updateCount($('#completed_items'), this.todosCompleted);
+    this.updateItemCount($('#completed_items'), this.todosCompleted);
   }
 
-  updateCount($containingElement, group) {
+  updateItemCount($containingElement, group) {
     $containingElement.attr('data-total', String(group.length));
     $containingElement.find('dd').text(group.length);
   }
 
+  updateListCount($container, todoGroups) {
+    let $dlTags = $container.find('dl');
 
+    $dlTags.each((_, element) => {
+      let dateGroup = $(element).attr('data-title'); 
+      this.updateItemCount($(element), todoGroups[dateGroup]);
+    });
+  }
 
+  updateAllListCounts() {
+    this.updateListCount(this.$ListContainer, this.todoGroups);
+  }
 
-  // initializePage(todos) {
-  //   // this.addForm();
-  //   this.loadSidebar(todos);
-  // }
-
-  // loadSidebar(todos) {
-  //   this.groupTodosByDate(todos);
-  //   this.$sidebar.html(this.sidebarTemplate);
-  //   // this.$sidebar.html(this.sidebarTemplate({ todos: todos, groups: this.todoGroups }));
-  // }
+  updateCompletedListCounts() {
+    this.updateListCount(this.$completedListContainer, this.todoCompletedGroups);
+  }
 
   groupTodosByDate(todos) {
     let todoGroups = {};
@@ -131,10 +119,6 @@ export class TodoView {
     this.$formModal.html(this.form(data));
     this.showModal();
   }
-
-  // addForm() {
-  //   $('#form_modal').html(this.form);
-  // }
 
   toggleModalVisibility() {
     this.$modal.fadeToggle();
