@@ -84,11 +84,12 @@ export class TodoView {
   }
 
   refreshPage(todos) {
-    this.updateTodos(todos);
+    // this.updateTodos(todos);
+    this.todos = todos;
     this.loadSidebar();
-    this.reregisterSidebarButton();
-    this.selectSidebarButton();
-    this.loadStage();
+    // this.reregisterSidebarButton();
+    // this.selectSidebarButton();
+    // this.loadStage();
   }
 
   saveSidebarButton($btn = $('#all_header')) {
@@ -108,12 +109,12 @@ export class TodoView {
     this.$activeSidebarBtn = $('#all_header');
   }
 
-  updateTodos(todos) {
-    this.todos = todos;
-    this.todosCompleted = todos.filter(todo => todo.completed);
-    this.todoGroups = Object.assign(this.groupTodosByDate(this.todos), { 'All Todos': this.todos });
-    this.todoCompletedGroups = Object.assign(this.groupTodosByDate(this.todosCompleted), { 'Completed': this.todosCompleted });
-  }
+  // updateTodos(todos) {
+  //   // this.todos = todos;
+  //   this.todosCompleted = todos.getCompleted();
+  //   this.todoGroups = Object.assign(this.groupTodosByDate(this.todos), { 'All Todos': this.todos });
+  //   this.todoCompletedGroups = Object.assign(this.groupTodosByDate(this.todosCompleted), { 'Completed': this.todosCompleted });
+  // }
 
   loadSidebar() {
     this.loadAllTodosDates();
@@ -145,11 +146,11 @@ export class TodoView {
   }
 
   loadAllTodosDates() {
-    this.$dateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoGroups)}));
+    this.$dateListContainer.html(this.sidebarList({ dateGroups: this.todos.getAllGroups() })); //this.getSortedDateKeys(this.todoGroups)
   }
 
   loadAllCompletedTodosDates() {
-    this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.getSortedDateKeys(this.todoCompletedGroups)}));
+    this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.todos.getCompletedGroups()}));
   }
 
   getSortedDateKeys(dates) {
@@ -158,16 +159,16 @@ export class TodoView {
   }
 
   updateAllItemCount() {
-    this.updateItemCount($('#all_header'), this.todos);
+    this.updateItemCount($('#all_header'), this.todos.getList('all'));
   }
 
   updateCompletedItemCount() {
-    this.updateItemCount($('#completed_items'), this.todosCompleted);
+    this.updateItemCount($('#completed_items'), this.todos.getList('all', true));
   }
 
-  updateItemCount($containingElement, group) {
-    $containingElement.attr('data-total', String(group.length));
-    $containingElement.find('dd').text(group.length);
+  updateItemCount($containingElement, todoList) {
+    $containingElement.attr('data-total', String(todoList.length));
+    $containingElement.find('dd').text(todoList.length);
   }
 
   updateListCount($container, todoGroups) {
@@ -235,11 +236,11 @@ export class TodoView {
   }
 
   updateAllListCounts() {
-    this.updateListCount(this.$dateListContainer, this.todoGroups);
+    this.updateListCount(this.$dateListContainer, this.todos.allTodoGroups);
   }
 
   updateCompletedListCounts() {
-    this.updateListCount(this.$completedDateListContainer, this.todoCompletedGroups);
+    this.updateListCount(this.$completedDateListContainer, this.todos.completedTodoGroups);
   }
 
   groupTodosByDate(todos) {

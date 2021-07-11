@@ -1,12 +1,13 @@
 import { TodoModel } from './api.js'
 import { TodoView } from './views.js'
-
+import { Todos } from './todos.js'
 
 export class App {
   constructor() {
     
     this.api = new TodoModel();
     this.view = new TodoView();
+    this.todosInstance = new Todos();
 
     this.loadPage();
     this.addListeners();
@@ -14,8 +15,13 @@ export class App {
 
   async loadPage() {
     this.api.getAll().then(todos => {
-      this.todos = todos;
-      this.view.loadPage(todos);
+      this.todos = todos; //
+      // console.log(todos);
+      this.todosInstance.set(todos);
+      // console.log(this.todosInstance.getAll());
+
+
+      this.view.loadPage(this.todosInstance);
     });
   }
 
