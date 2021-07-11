@@ -9,27 +9,26 @@ export class App {
 
     this.$itemsContainer = $('#items');
 
-    this.getTodos();
+    this.loadPage();
     this.addListeners();
-    // this.addListeners();
-    // this.api.falsePut(3);
-    // this.test();
+
   }
 
-  async getTodos() {
+  async loadPage() {
     this.api.getAll().then(todos => {
       this.todos = todos;
-      this.loadPage();
+      this.view.loadPage(todos);
     });
   }
 
-  loadPage() {
-    this.view.loadPage(this.todos);
+  async refreshPage() {
+    this.api.getAll().then(todos => {
+      this.todos = todos;
+      this.view.refreshPage(todos);
+    });
   }
 
   addListeners() {
-    // this.clickDocToTest();
-    this.addHomepageListeners();
     this.addModalListeners();
     this.addSidebarListeners();
     this.addTodoItemListeners();
@@ -41,13 +40,7 @@ export class App {
 
       if (this.isNewTodoBtn(e)) return this.view.loadTodoForm();
       if (this.isDeleteItemBtn(e)) return this.deleteSelectedTodo(e);
-      console.log('test')
-      // switch(true) {
-      //   case this.isNewTodoBtn(e):
-      // }
-      // if ($(e.target).closest('label').attr('for') === 'new_item') {
-      //   this.view.loadTodoForm();
-      // }
+
     });
     // this.addDeleteBtnListeners();
     // this.addCompletionStatusListeners();
@@ -64,28 +57,8 @@ export class App {
 
   deleteSelectedTodo(event) {
     let id = $(event.target).closest('tr').data('id');
-    this.api.delete(id); //.then( () => console.log(String(id) + ' | deleted'))
-    // refresh stage
-  }
+    this.api.delete(id).then(() => this.refreshPage());
 
-  addDeleteBtnListeners() {
-    // this.$itemsContainer.
-  }
-
-  addCompletionStatusListeners() {}
-  addEditBtnListeners() {}
-
-  addHomepageListeners() {
-    this.addNewTodoBtnListener();
-  }
-
-  addNewTodoBtnListener() {
-    // this.$itemsContainer.on('click', e => {
-    //   e.preventDefault();
-    //   if ($(e.target).closest('label').attr('for') === 'new_item') {
-    //     this.view.loadTodoForm();
-    //   }
-    // });
   }
 
   addModalListeners() {
@@ -103,20 +76,8 @@ export class App {
 
   addSidebarListeners() {
     $('#sidebar').on('click', e => {
-      let $target = $(e.target);
-
       let $targetBtn = $(e.target).closest('[data-title]');
-
-      if ($targetBtn.length !== 0) {
-        // this.view.clearSidebarButtons();
-        // $targetBtn.addClass('active');
-
-        // // console.log($targetBtn.data('title')) //
-
-
-        this.view.displayList($targetBtn);
-        // refresh page
-      }
+      if ($targetBtn.length !== 0) this.view.displayList($targetBtn);
     });
   }
 
@@ -140,43 +101,16 @@ export class App {
     let form = $('form')[0];
     let data = new FormData(form);
 
-    if (!this.isValidTodo(data)) {
-      alert('You must enter a title at least 3 characters long.');
-      return;
-    }
-    
-    this.api.submit(form.getAttribute('method'), data)
+    if (this.isValidTodo(data)) {
+      this.api.submit(form.getAttribute('method'), data)
       .then(() => {
-        // todo: update homepage
-        // this.view.loadPage();
         this.view.hideModal();
-        this.getTodos();
+        this.loadPage();
       });
+    } else alert('You must enter a title at least 3 characters long.');
   }
-
-
 
   isValidTodo(formData) {
     return formData.get('title').length >= 3;
   }
-
-
-  // test() {
-  //     let data = {
-  //       title: "todo3",
-  //     };
-
-  //     // let data = {
-  //     //   title: "jay's todo3",
-  //     //   day: 44,
-  //     // };
-      
-  //     this.api.falsePost('POST', data);
-  // }
-
-  // clickDocToTest() {
-  //   $(document).on('click', e => {
-  //     console.log(this.todos);
-  //   });
-  // }
 }

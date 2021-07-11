@@ -34,7 +34,7 @@ export class TodoModel {
     const requestObj = Object.assign({ method: 'DELETE' }, this.defaultHeaderObj); // does delete need this header?
     return await fetch(this.path + String(id), requestObj)
       .then(response => {
-        if (response.status === 404) this.errorAlert(response, 'Could not delete todo item');
+        if (response.status === 404) console.log(response.status, ': Could not delete todo item');
       });
   }
 
