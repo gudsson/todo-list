@@ -38,35 +38,60 @@ export class App {
     this.$itemsContainer.on('click', e => {
       e.preventDefault();
 
-      if (this.isNewTodoBtn(e)) return this.view.loadTodoForm();
-      if (this.isDeleteItemBtn(e)) return this.deleteSelectedTodo(e);
+      let $btn = $(e.target);
 
+      if (this.isNewTodoBtn($btn)) return this.view.loadTodoForm();
+      if (this.isDeleteItemBtn($btn)) return this.deleteSelectedTodo($btn);
+      if (this.isEditItemBtn($btn)) return this.editSelectedItem($btn);
+      if (this.isToggleItemBtn($btn)) return this.toggleSelectedItem($btn);
     });
     // this.addDeleteBtnListeners();
     // this.addCompletionStatusListeners();
     // this.addEditBtnListeners();
   }
+
+  isEditItemBtn($btn) {
+    let forAttr = $btn.attr('for');
+    return forAttr && forAttr.startsWith('item_');
+  }
+
+  isToggleItemBtn($btn) {
+    return $btn.closest('.list_item').length !== 0;
+  }
+
+  toggleSelectedItem($btn) {
+    // TODO: hookup
+    return console.log('toggle me!')
+  }
+
+  editSelectedItem($btn) {
+    // TODO: hookup
+    let id = $btn.attr('for').match(/\d+/g)[0];
+    this.api.read(id).then(response => this.view.loadTodoForm(response));
+    ;
+  }
   
-  isNewTodoBtn(event) {
-    return $(event.target).closest('label').attr('for') === 'new_item';
+  isNewTodoBtn($btn) {
+    return $btn.closest('label').attr('for') === 'new_item';
   }
 
-  isDeleteItemBtn(event) {
-    return $(event.target).closest('td').hasClass('delete');
+  isDeleteItemBtn($btn) {
+    return $btn.closest('td').hasClass('delete');
   }
 
-  deleteSelectedTodo(event) {
-    let id = $(event.target).closest('tr').data('id');
+  deleteSelectedTodo($btn) {
+    let id = $btn.closest('tr').data('id');
     this.api.delete(id).then(() => this.refreshPage());
-
   }
 
   addModalListeners() {
     $('#form_modal').on('click', e => {
       e.preventDefault();
       e.stopPropagation();
-      this.checkForSaveClick(e);
-      this.checkForCompletedClick(e);
+      let $btn = $(e.target);
+
+      this.checkForSaveClick($btn);
+      this.checkForCompletedClick($btn);
     });
 
     $('#modal_layer').on('click', e => {
@@ -81,13 +106,18 @@ export class App {
     });
   }
 
-  checkForSaveClick(event) {
-    if ($(event.target).attr('type') === 'submit') this.submitTodo();
+  checkForSaveClick($btn) {
+    if ($btn.attr('type') === 'submit') {
+      //disable button
+      
+      this.submitTodo();
+    }
   }
 
-  checkForCompletedClick(event) {
-    if ($(event.target).prop('tagName') === 'BUTTON') {
+  checkForCompletedClick($btn) {
+    if ($btn.prop('tagName') === 'BUTTON') {
       if ($('#id').attr('value')) {
+        $btn.attr('disabled',true);
         $('#completed').attr('value', 'true');
         this.submitTodo();
       } else {

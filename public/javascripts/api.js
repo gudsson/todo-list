@@ -5,12 +5,12 @@ export class TodoModel {
   }
 
   async getAll() {
-    return await this.read(this.path);
+    return await this.read();
   }
 
-  async read(path) {
+  async read(id) {
     const requestObj = Object.assign({ method: 'GET' }, this.defaultHeaderObj);
-    return await fetch(path, requestObj).then(response => response.json())
+    return await fetch(`${this.path}${id ? id : ''}`, requestObj).then(response => response.json())
   }
 
   reset() {
@@ -25,8 +25,6 @@ export class TodoModel {
       ...this.defaultHeaderObj,
       body: JSON.stringify(Object.fromEntries(formData)),
     }
-    // console.log(`${this.path}${id ? id : ''}`);
-    // console.log(requestObj);
     return await fetch(`${this.path}${id ? id : ''}`, requestObj);
   }
 
