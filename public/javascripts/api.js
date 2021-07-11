@@ -14,7 +14,6 @@ export class TodoModel {
   }
 
   reset() {
-    //reset might not need the header
     this.read('/api/reset');
   }
 
@@ -43,25 +42,5 @@ export class TodoModel {
       .then(response => {
         if (response.status === 404) console.log(response.status, ': Could not delete todo item');
       });
-  }
-
-  async falsePut(id) {
-    let requestObj = {
-      method: 'PUT',
-      ...this.defaultHeaderObj,
-      body: JSON.stringify({ completed: true }),
-    }
-    return await fetch(`${this.path}${id}`, requestObj);
-    // console.log(requestObj);
-  }
-
-  async falsePost(method, formData) {
-    let requestObj = {
-      method: method,
-      ...this.defaultHeaderObj,
-      body: JSON.stringify(formData),
-    }
-    return await fetch(this.path, requestObj);
-    // console.log(requestObj);
   }
 }

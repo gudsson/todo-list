@@ -1,33 +1,57 @@
 export class TodoView {
   constructor() {
     this.$main = $('main');
-    // this.$modal = $('.modal');
-    // this.$formModal = $('#form_modal');
     this.$sidebar = $('#sidebar');
     this.$dateListContainer = $('#all_lists');
     this.$completedDateListContainer = $('#completed_lists');
     this.$todoListContainer = $('#items');
-    // this.modal = Handlebars.compile($('#modal').html());
+
     this.form = Handlebars.compile($('#modalForm').html());
     this.sidebarList = Handlebars.compile($('#sidebarList').html());
     this.todoListTemplate = Handlebars.compile($('#todoListTemplate').html());
 
-    // this.activeSidebarBtn = $('#all_header');
     this.resetActiveList();
 
-    // this.sidebarTemplate = Handlebars.compile($('#sidebarTemplate').html());
-    // // this.optionTemplate = Handlebars.compile($('#optionTemplate').html());
+    Handlebars.registerHelper('dayOptions', day => {
+      let options = [];
 
-    // Handlebars.registerHelper('ifSelected', () => {
+      for (let idx = 1; idx <= 31; idx++) {
+        let value = String(idx).padStart(2, '0');
+        let selected = day === value;
+        options.push({ value, label: idx, selected });
+      }
 
-    // });
-    Handlebars.registerHelper('isSelected', (optionValue, dataValue) => {
-      return optionValue === dataValue;
+      return options;
     });
 
-    // this.allListsPartial = Handlebars.compile($('#allListsPartial').html());
-    // Handlebars.registerPartial('allListsPartial', $('#allListsPartial').html());
-    this.todoListHeader = Handlebars.compile($('#todoListHeader').html()); // don't need if not passing anything to template
+    Handlebars.registerHelper('monthOptions', month => {
+      let options = [];
+      let months = ['January','February', 'March', 'April', 'May',
+                    'June', 'July', 'August', 'September', 'October',
+                    'November', 'December'];
+
+      for (let idx = 1; idx <= 12; idx++) {
+        let value = String(idx).padStart(2, '0');
+        let selected = month === value;
+        options.push({ value, label: months[idx - 1], selected });
+      }
+
+      return options;
+    });
+
+    Handlebars.registerHelper('yearOptions', year => {
+      let options = [];
+      let startingYear = 2021;
+
+      for (let idx = startingYear; idx <= startingYear + 11; idx++) {
+        let value = String(idx).padStart(2, '0');
+        let selected = year === value;
+        options.push({ value, label: idx, selected });
+      }
+
+      return options;
+    });
+
     Handlebars.registerPartial('todoListHeader', $('#todoListHeader').html());
 
     this.todoTemplate = Handlebars.compile($('#todoListHeader').html());
@@ -167,17 +191,6 @@ export class TodoView {
   selectSidebarButton() {
     this.clearSidebarButtons();
     this.$activeSidebarBtn.addClass('active');
-  }
-
-  getTodosByList($pressedBtn) {
-    let listName = $pressedBtn.data('title')
-    let listType = this.getListType($pressedBtn);
-
-    if ($pressedBtn.prop('tagName') === 'HEADER') {
-      return listType === 'all' ? this.todos : this.todosCompleted;
-    }
-
-    return listType === 'all' ? this.todoGroups[listName] : this.todoCompletedGroups[listName];
   }
 
   sortTodosByStatus(todoArr) {
