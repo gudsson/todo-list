@@ -18,6 +18,15 @@ export class TodoModel {
     this.read('/api/reset');
   }
 
+  async updateTodo(todo) {
+    let requestObj = {
+      method: 'PUT',
+      ...this.defaultHeaderObj,
+      body: JSON.stringify(todo),
+    }
+    return await fetch(`${this.path}${todo.id}`, requestObj);
+  }
+
   async submit(method, formData) {
     let id = formData.get('id');
     let requestObj = {

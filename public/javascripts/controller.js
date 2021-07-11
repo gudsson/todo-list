@@ -7,11 +7,8 @@ export class App {
     this.api = new TodoModel();
     this.view = new TodoView();
 
-    this.$itemsContainer = $('#items');
-
     this.loadPage();
     this.addListeners();
-
   }
 
   async loadPage() {
@@ -35,7 +32,7 @@ export class App {
   }
 
   addTodoItemListeners() {
-    this.$itemsContainer.on('click', e => {
+    $('#items').on('click', e => {
       e.preventDefault();
 
       let $btn = $(e.target);
@@ -45,9 +42,6 @@ export class App {
       if (this.isEditItemBtn($btn)) return this.editSelectedItem($btn);
       if (this.isToggleItemBtn($btn)) return this.toggleSelectedItem($btn);
     });
-    // this.addDeleteBtnListeners();
-    // this.addCompletionStatusListeners();
-    // this.addEditBtnListeners();
   }
 
   isEditItemBtn($btn) {
@@ -60,15 +54,27 @@ export class App {
   }
 
   toggleSelectedItem($btn) {
-    // TODO: hookup
-    return console.log('toggle me!')
+    let todo = this.getTodoById(this.getIdFromBtn($btn));
+
+    this.toggleCompletionStatus(todo);
+    this.api.updateTodo(todo).then(() => this.refreshPage());
+  }
+
+  toggleCompletionStatus(todo) {
+    todo.completed = !todo.completed;
   }
 
   editSelectedItem($btn) {
-    // TODO: hookup
-    let id = $btn.attr('for').match(/\d+/g)[0];
-    this.api.read(id).then(response => this.view.loadTodoForm(response));
-    ;
+    let todo = this.getTodoById(this.getIdFromBtn($btn));
+    this.view.loadTodoForm(todo);
+  }
+
+  getTodoById(id) {
+    return this.todos.find(todo => todo.id === id);
+  }
+
+  getIdFromBtn($btn) {
+    return $btn.closest('tr').data('id');
   }
   
   isNewTodoBtn($btn) {
@@ -107,9 +113,7 @@ export class App {
   }
 
   checkForSaveClick($btn) {
-    if ($btn.attr('type') === 'submit') {
-      //disable button
-      
+    if ($btn.attr('type') === 'submit') {     
       this.submitTodo();
     }
   }
@@ -127,7 +131,6 @@ export class App {
   }
 
   submitTodo() {
-    console.log('submit');
     let form = $('form')[0];
     let data = new FormData(form);
 
