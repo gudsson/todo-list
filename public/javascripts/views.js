@@ -6,12 +6,18 @@ export class TodoView {
     this.$completedDateListContainer = $('#completed_lists');
     this.$todoListContainer = $('#items');
 
-    this.form = Handlebars.compile($('#modalForm').html());
-    this.sidebarList = Handlebars.compile($('#sidebarList').html());
-    this.todoListTemplate = Handlebars.compile($('#todoListTemplate').html());
-
     this.resetActiveList();
 
+    this.registerHandlebars();
+  }
+
+  registerHandlebars() {
+    this.registerHandlebarsHelpers();
+    this.registerHandlebarsPartials();
+    this.registerHandlebarsTemplates();
+  }
+
+  registerHandlebarsHelpers() {
     Handlebars.registerHelper('dayOptions', day => {
       let options = [];
 
@@ -51,21 +57,26 @@ export class TodoView {
 
       return options;
     });
+  }
 
+  registerHandlebarsPartials() {
     Handlebars.registerPartial('todoListHeader', $('#todoListHeader').html());
-
-    this.todoTemplate = Handlebars.compile($('#todoListHeader').html());
     Handlebars.registerPartial('todoTemplate', $('#todoTemplate').html());
-
-    this.dayOptions = Handlebars.compile($('#dayOptions').html());
     Handlebars.registerPartial('dayOptions', $('#dayOptions').html());
-
-    this.monthOptions = Handlebars.compile($('#monthOptions').html());
     Handlebars.registerPartial('monthOptions', $('#monthOptions').html());
-
-    this.yearOptions = Handlebars.compile($('#yearOptions').html());
     Handlebars.registerPartial('yearOptions', $('#yearOptions').html());
   }
+
+  registerHandlebarsTemplates() {
+    this.form = Handlebars.compile($('#modalForm').html());
+    this.sidebarList = Handlebars.compile($('#sidebarList').html());
+    this.todoListTemplate = Handlebars.compile($('#todoListTemplate').html());
+    this.todoTemplate = Handlebars.compile($('#todoListHeader').html());
+    this.dayOptions = Handlebars.compile($('#dayOptions').html());
+    this.monthOptions = Handlebars.compile($('#monthOptions').html());
+    this.yearOptions = Handlebars.compile($('#yearOptions').html());
+  }
+
   
   loadPage(todos) {
     this.saveSidebarButton();
