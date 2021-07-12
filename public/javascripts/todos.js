@@ -66,7 +66,7 @@ export class Todos {
     let todoGroups = {};
 
     todos.forEach(todo => {
-      let date = (todo.month && todo.year)
+      let date = (todo.month.trim() && todo.year.trim())
         ? `${todo.month}/${todo.year.slice(2)}` : 'No Due Date';
 
       if (todoGroups[date] === undefined) {

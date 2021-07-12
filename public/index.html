@@ -34,19 +34,19 @@
 
   <!-- Dropdown Partials -->
   <script id='dayOptions' type='text/x-handlebars'>
-    <option value="">Day</option>
+    <option value="  ">Day</option>
     {{#each (dayOptions day)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}
   </script>
   <script id='monthOptions' type='text/x-handlebars'>
-    <option value="">Month</option>
+    <option value="  ">Month</option>
     {{#each (monthOptions month)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}
   </script>
   <script id='yearOptions' type='text/x-handlebars'>
-    <option value="">Year</option>
+    <option value="    ">Year</option>
     {{#each (yearOptions year)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}

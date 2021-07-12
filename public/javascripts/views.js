@@ -26,7 +26,7 @@ export class TodoView {
 
   registerHandlebarsHelpers() {
     Handlebars.registerHelper('getDueDate', todo => {
-      return (todo.month && todo.year) ? `${todo.month}/${todo.year.slice(2)}` : `No Due Date`;
+      return (todo.month.trim() && todo.year.trim()) ? `${todo.month}/${todo.year.slice(2)}` : `No Due Date`;
     });
 
     Handlebars.registerHelper('dayOptions', day => {
