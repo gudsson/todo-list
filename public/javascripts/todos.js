@@ -1,13 +1,25 @@
 export class Todos {
   constructor() {
-    this.todos = [];
-    this.completedTodos = [];
-    this.allTodoGroups = {};
-    this.completedTodoGroups = {};
+    // this.todos = [];
+    // this.completedTodos = [];
+    // this.allTodoGroups = {};
+    // this.completedTodoGroups = {};
+  }
+  
+  static isValidTodo(formData) {
+    return formData.get('title').length >= 3;
   }
 
+  static sort(todos) {
+    return todos.sort((a, b) => a.completed - b.completed);
+  }
+
+  count() {
+    return this.todos.length;
+  }
+  
   set(todos) {
-    this.todos = todos;
+    this.todos = Todos.sort(todos);
     this.completedTodos = this._setCompleted();
     this.allTodoGroups = this._groupTodosByDate(this.todos);
     this.completedTodoGroups = this._groupTodosByDate(this.completedTodos);
@@ -26,6 +38,15 @@ export class Todos {
     }
   }
 
+  get(id) {
+    return this.todos.find(todo => todo.id === id);
+  }
+
+  getListAsObject(listName, completed = false) {
+    return {[listName]: this.getList(listName, completed)};
+  }
+
+
   // getCompletedList(listName) {
 
   // }
@@ -38,16 +59,12 @@ export class Todos {
 
   // }
 
-  getAll() {
-    return this.todos.sort((a, b) => a.completed - b.completed);
-  }
+  // getAll() {
+  //   return this.todos.sort((a, b) => a.completed - b.completed);
+  // }
 
   getCompleted() {
     return this.completedTodos;
-  }
-
-  _setCompleted() {
-    return this.todos.filter(todo => todo.completed);
   }
 
   getAllGroups() {
@@ -56,6 +73,10 @@ export class Todos {
 
   getCompletedGroups() {
     return this._sortDateKeys(this.completedTodoGroups);
+  }
+
+  _setCompleted() {
+    return this.todos.filter(todo => todo.completed);
   }
 
   _sortDateKeys(todos) {

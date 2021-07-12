@@ -10,11 +10,11 @@ export class TodoModel {
 
   async read(id) {
     const requestObj = Object.assign({ method: 'GET' }, this.defaultHeaderObj);
-    return await fetch(`${this.path}${id ? id : ''}`, requestObj).then(response => response.json())
+    return await fetch(`${this.path}${id ? id : ''}`, requestObj).then(response => response.json());
   }
 
-  reset() {
-    this.read('/api/reset');
+  async reset() {
+    return await(fetch('/api/reset'));
   }
 
   async updateTodo(todo) {

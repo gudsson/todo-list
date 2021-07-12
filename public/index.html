@@ -14,21 +14,13 @@
     <div id="sidebar">
       <section id="all">
         <div id="all_todos">
-          <header data-title="All Todos" data-total="" id="all_header" class="active">
-            <dl>
-            <dt>All Todos</dt><dd></dd>
-            </dl>
-          </header>
+          <header data-title="All Todos" data-total="" id="all_header" class="active"></header>
         </div>
         <article id="all_lists"></article>
       </section>
       <section class="completed" id="completed_items">
         <div id="completed_todos">
-          <header data-title="Completed" data-total="" id="all_done_header">
-            <dl>
-              <dt>Completed</dt><dd></dd>
-            </dl>
-          </header>
+          <header data-title="Completed" data-total="" id="all_done_header"></header>
         </div>
         <article id="completed_lists"></article>
       </section>
@@ -100,6 +92,12 @@
   </script>
 
   <!-- Sidebar Templates -->
+  <script id='sidebarHeader' type='text/x-handlebars'>
+    <dl>
+      <dt>{{listName}}</dt><dd></dd>
+    </dl>
+  </script>
+
   <script id='sidebarList' type='text/x-handlebars'>
     {{#each dateGroups}}
     <dl data-title="{{this}}" data-total="">

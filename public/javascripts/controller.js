@@ -4,32 +4,27 @@ import { Todos } from './todos.js'
 
 export class App {
   constructor() {
-    
     this.api = new TodoModel();
     this.view = new TodoView();
-    this.todosInstance = new Todos();
+    this.todos = new Todos();
 
     this.loadPage();
     this.addListeners();
   }
 
-  async loadPage() {
-    this.api.getAll().then(todos => {
-      this.todos = todos; //
-      // console.log(todos);
-      this.todosInstance.set(todos);
-      // console.log(this.todosInstance.getAll());
-
-
-      this.view.loadPage(this.todosInstance);
-    });
+  async renderPage(viewFunc) {
+    let todos = await this.api.getAll();
+    this.todos.set(todos);
+    this.itemsListenersActive = true;
+    viewFunc(this.todos);
   }
 
-  async refreshPage() {
-    this.api.getAll().then(todos => {
-      this.todos = todos;
-      this.view.refreshPage(todos);
-    });
+  loadPage() {
+    this.renderPage(this.view.loadPage.bind(this.view));
+  }
+
+  refreshPage() {
+    this.renderPage(this.view.refreshPage.bind(this.view));
   }
 
   addListeners() {
@@ -41,13 +36,24 @@ export class App {
   addTodoItemListeners() {
     $('#items').on('click', e => {
       e.preventDefault();
-
       let $btn = $(e.target);
-
       if (this.isNewTodoBtn($btn)) return this.view.loadTodoForm();
-      if (this.isDeleteItemBtn($btn)) return this.deleteSelectedTodo($btn);
-      if (this.isEditItemBtn($btn)) return this.editSelectedItem($btn);
-      if (this.isToggleItemBtn($btn)) return this.toggleSelectedItem($btn);
+      
+      
+      if (this.itemsListenersActive) {
+        this.itemsListenersActive = false;
+
+        switch (true) {
+          case (this.isToggleItemBtn($btn)): 
+            this.toggleSelectedItem($btn);
+            break;
+          case (this.isDeleteItemBtn($btn)):
+            this.deleteSelectedTodo($btn);
+            break;
+          case (this.isEditItemBtn($btn)):
+            this.editSelectedItem($btn);
+        }
+      }
     });
   }
 
@@ -61,8 +67,9 @@ export class App {
   }
 
   toggleSelectedItem($btn) {
-    let todo = this.getTodoById(this.getIdFromBtn($btn));
-
+    let todo = this.todos.get(this.getIdFromBtn($btn));
+    let $checkbox = $btn.closest('.list_item').find('input');
+    $checkbox.prop("checked", !$checkbox.prop("checked"))
     this.toggleCompletionStatus(todo);
     this.api.updateTodo(todo).then(() => this.refreshPage());
   }
@@ -72,12 +79,8 @@ export class App {
   }
 
   editSelectedItem($btn) {
-    let todo = this.getTodoById(this.getIdFromBtn($btn));
+    let todo = this.todos.get(this.getIdFromBtn($btn));
     this.view.loadTodoForm(todo);
-  }
-
-  getTodoById(id) {
-    return this.todos.find(todo => todo.id === id);
   }
 
   getIdFromBtn($btn) {
@@ -94,7 +97,13 @@ export class App {
 
   deleteSelectedTodo($btn) {
     let id = $btn.closest('tr').data('id');
-    this.api.delete(id).then(() => this.refreshPage());
+
+    this.deleteTodo(id).then(() => this.refreshPage());
+  }
+  
+  async deleteTodo(id) {
+    if (this.todos.count() === 1) return await this.api.reset();
+    return await this.api.delete(id);
   }
 
   addModalListeners() {
@@ -120,9 +129,7 @@ export class App {
   }
 
   checkForSaveClick($btn) {
-    if ($btn.attr('type') === 'submit') {     
-      this.submitTodo();
-    }
+    if ($btn.attr('type') === 'submit') this.submitTodo();
   }
 
   checkForCompletedClick($btn) {
@@ -141,16 +148,12 @@ export class App {
     let form = $('form')[0];
     let data = new FormData(form);
 
-    if (this.isValidTodo(data)) {
+    if (Todos.isValidTodo(data)) {
       this.api.submit(form.getAttribute('method'), data)
       .then(() => {
         this.view.hideModal();
         this.loadPage();
       });
     } else alert('You must enter a title at least 3 characters long.');
-  }
-
-  isValidTodo(formData) {
-    return formData.get('title').length >= 3;
   }
 }

@@ -1,14 +1,21 @@
 export class TodoView {
   constructor() {
+    this.initializeContainers();
+    this.registerHandlebars();
+  }
+
+  initializeContainers() {
     this.$main = $('main');
     this.$sidebar = $('#sidebar');
+    this.$allHeader = $('#all_header');
+    this.$allDoneHeader = $('#all_done_header');
     this.$dateListContainer = $('#all_lists');
     this.$completedDateListContainer = $('#completed_lists');
     this.$todoListContainer = $('#items');
-
-    this.resetActiveList();
-
-    this.registerHandlebars();
+    this.$formModal = $('#form_modal');
+    this.$modal = $('.modal');
+    this.$allTodosBtn = $('#all_header');
+    this.$allCompletedBtn = $('#completed_items');
   }
 
   registerHandlebars() {
@@ -75,46 +82,40 @@ export class TodoView {
     this.dayOptions = Handlebars.compile($('#dayOptions').html());
     this.monthOptions = Handlebars.compile($('#monthOptions').html());
     this.yearOptions = Handlebars.compile($('#yearOptions').html());
+    this.sidebarHeader = Handlebars.compile($('#sidebarHeader').html());
   }
 
-  
   loadPage(todos) {
     this.saveSidebarButton();
     this.refreshPage(todos)
   }
 
   refreshPage(todos) {
-    // this.updateTodos(todos);
     this.todos = todos;
     this.loadSidebar();
-    // this.reregisterSidebarButton();
-    // this.selectSidebarButton();
-    // this.loadStage();
+    this.reregisterSidebarButton();
+    this.selectSidebarButton();
+    this.loadStage();
   }
 
-  saveSidebarButton($btn = $('#all_header')) {
+  displayList($pressedBtn) {
+    this.saveSidebarButton($pressedBtn)
+    this.selectSidebarButton();
+    this.loadStage();
+  }
+
+  saveSidebarButton($btn = this.$allTodosBtn) {
     let dataTitle = $btn.data('title');
     let parentId = $btn.parent().attr('id');
     this.$activeSidebarBtn = $btn;
-    this.$activeSidebarData = [parentId, dataTitle];
+    this.activeSidebarData = [parentId, dataTitle];
   }
 
   reregisterSidebarButton() {
-    let [parentId, dataTitle] = this.$activeSidebarData;
+    let [parentId, dataTitle] = this.activeSidebarData;
     this.$activeSidebarBtn = $(`#${parentId} [data-title='${dataTitle}']`)
     if (this.$activeSidebarBtn.length === 0) this.saveSidebarButton();
   }
-
-  resetActiveList() {
-    this.$activeSidebarBtn = $('#all_header');
-  }
-
-  // updateTodos(todos) {
-  //   // this.todos = todos;
-  //   this.todosCompleted = todos.getCompleted();
-  //   this.todoGroups = Object.assign(this.groupTodosByDate(this.todos), { 'All Todos': this.todos });
-  //   this.todoCompletedGroups = Object.assign(this.groupTodosByDate(this.todosCompleted), { 'Completed': this.todosCompleted });
-  // }
 
   loadSidebar() {
     this.loadAllTodosDates();
@@ -123,16 +124,19 @@ export class TodoView {
   }
 
   loadStage() {
-    let todoListObj = this.getListObj(this.getListInfoFromBtn());
-    this.loadTodoList(todoListObj);
+    let {title, completed} = this.getListInfoFromBtn();
+    this.loadTodoList(this.todos.getListAsObject(title, completed));
   }
 
-  getListObj(listIdObj) {
-    let [title, type] = [listIdObj.listTitle, listIdObj.listType];
-    let todos = type === 'all' ? this.sortTodosByStatus(this.todoGroups[title]) : this.todoCompletedGroups[title];
-    return { [title]: todos };
+  getListInfoFromBtn() {
+    let $btn = this.$activeSidebarBtn;
+    return { title: $btn.data('title'), completed: this.getListType($btn) };
   }
 
+  getListType($pressedBtn) {
+    return $pressedBtn.closest('section').attr('id') === 'completed_items';
+  }
+  
   loadTodoList(listObj) {
     let listName = Object.keys(listObj)[0];
     this.$todoListContainer.html(this.todoListTemplate({listTitle: listName, todos: listObj[listName]}));
@@ -146,24 +150,21 @@ export class TodoView {
   }
 
   loadAllTodosDates() {
-    this.$dateListContainer.html(this.sidebarList({ dateGroups: this.todos.getAllGroups() })); //this.getSortedDateKeys(this.todoGroups)
+    this.$allHeader.html(this.sidebarHeader({ listName: 'All Todos' }));
+    this.$dateListContainer.html(this.sidebarList({ dateGroups: this.todos.getAllGroups() }));
   }
 
   loadAllCompletedTodosDates() {
+    this.$allDoneHeader.html(this.sidebarHeader({ listName: 'Completed' }));
     this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.todos.getCompletedGroups()}));
   }
 
-  getSortedDateKeys(dates) {
-    let keys = Object.keys(dates).filter(key => !['All Todos', 'Completed'].includes(key));
-    return keys.sort((a, b) => +a.replace(/\D/g, '') - +b.replace(/\D/g, ''));
-  }
-
   updateAllItemCount() {
-    this.updateItemCount($('#all_header'), this.todos.getList('all'));
+    this.updateItemCount(this.$allTodosBtn, this.todos.getList('all'));
   }
 
   updateCompletedItemCount() {
-    this.updateItemCount($('#completed_items'), this.todos.getList('all', true));
+    this.updateItemCount(this.$allCompletedBtn, this.todos.getList('all', true));
   }
 
   updateItemCount($containingElement, todoList) {
@@ -180,33 +181,9 @@ export class TodoView {
     });
   }
 
-  displayList($pressedBtn) {
-    this.saveSidebarButton($pressedBtn)
-    this.$activeSidebarBtn = $pressedBtn;
-    this.selectSidebarButton();
-    this.loadStage();
-  }
-
-  getListInfoFromBtn() {
-    let $btn = this.$activeSidebarBtn;
-    return { listTitle: $btn.data('title'), listType: this.getListType($btn) };
-  }
-
-  changeList(newListIdObj) {
-    this.activeList = newListIdObj
-  }
-  
-  getListType($pressedBtn) {
-    return $pressedBtn.closest('section').attr('id');
-  }
-
   selectSidebarButton() {
     this.clearSidebarButtons();
     this.$activeSidebarBtn.addClass('active');
-  }
-
-  sortTodosByStatus(todoArr) {
-    return todoArr.sort((a, b) => a.completed - b.completed);
   }
 
   toggleModalVisibility() {
@@ -230,8 +207,7 @@ export class TodoView {
   }
 
   loadTodoForm(data = {}) {
-    $('#form_modal').html(this.form(data));
-    this.$modal = $('.modal');
+    this.$formModal.html(this.form(data));
     this.showModal();
   }
 
