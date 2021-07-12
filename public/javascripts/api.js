@@ -11,7 +11,10 @@ export class TodoModel {
   async read(id) {
     const requestObj = { method: 'GET', ...this.defaultHeaderObj};
     return await fetch(`${this.path}${id ? id : ''}`, requestObj)
-      .catch(error => this.alertError(error, 'GET'));
+      .then(response => {
+        if (response.status === 404) alert(`${response.status}: The todo could not be found`);
+        return response.json();
+      }).catch(error => this.alertError(error, 'GET'));
   }
 
   async reset() {
@@ -25,7 +28,13 @@ export class TodoModel {
       body: JSON.stringify(todo),
     }
     return await fetch(`${this.path}${todo.id}`, requestObj)
-      .catch(error => this.alertError(error, method));
+      .then(response => {
+        if (response.status === 400) {
+          alert(`${response.status}: The todo could not be saved`);
+        } else if (response.status === 404) {
+          alert(`${response.status}: The todo could not be found`);
+        }
+      }).catch(error => this.alertError(error, method));
   }
 
   async submit(method, formData) {
@@ -41,7 +50,9 @@ export class TodoModel {
 
   async delete(id) {
     return await fetch(this.path + String(id), { method: 'DELETE' })
-      .catch(error => this.alertError(error, 'DELETE'));
+      .then(response => {
+        if (response.status === 404) alert(`${response.status}: The todo could not be found`);
+      }).catch(error => this.alertError(error, 'DELETE'));
   }
 
   alertError(error, method) {

@@ -10,8 +10,6 @@ export class App {
 
     this.loadPage();
     this.addListeners();
-
-    this.api.delete(69);
   }
 
   async renderPage(viewFunc) {
@@ -44,7 +42,10 @@ export class App {
       if (this.isEditItemBtn($btn)) return this.editSelectedItem($btn);
       
       if (this.itemsListenersActive) {
-        this.itemsListenersActive = false;
+
+        if (this.isToggleItemBtn($btn) || this.isDeleteItemBtn($btn)) {
+          this.itemsListenersActive = false;
+        }
 
         switch (true) {
           case (this.isToggleItemBtn($btn)): 
@@ -58,7 +59,7 @@ export class App {
   }
 
   isHamburgerBtn($btn) {
-    return $btn.closest('[for="sidebar_toggle"]').length !== 0;
+    return $btn.closest('[alt="Toggle Sidebar"]').length !== 0;
   }
 
   isEditItemBtn($btn) {

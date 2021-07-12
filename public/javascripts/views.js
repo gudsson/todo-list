@@ -10,7 +10,7 @@ export class TodoView {
     this.$allHeader = $('#all_header');
     this.$allDoneHeader = $('#all_done_header');
     this.$dateListContainer = $('#all_lists');
-    this.$completedDateListContainer = $('#completed_lists');
+    this.$doneListContainer = $('#completed_lists');
     this.$todoListContainer = $('#items');
     this.$formModal = $('#form_modal');
     this.$modal = $('.modal');
@@ -117,8 +117,8 @@ export class TodoView {
 
   reregisterSidebarButton() {
     let [parentId, dataTitle] = this.activeSidebarData;
-    this.$activeSidebarBtn = $(`#${parentId} [data-title='${dataTitle}']`)
-    if (this.$activeSidebarBtn.length === 0) this.saveSidebarButton();
+    let $btn = $(`#${parentId} [data-title='${dataTitle}']`);
+    if ($btn.length !== 0) this.saveSidebarButton($btn);
   }
 
   loadSidebar() {
@@ -133,17 +133,19 @@ export class TodoView {
   }
 
   getListInfoFromBtn() {
-    let $btn = this.$activeSidebarBtn;
-    return { title: $btn.data('title'), completed: this.getListType($btn) };
+    let [parentId, dataTitle] = this.activeSidebarData;
+    return { title: dataTitle, completed: this.getListType(parentId) };
   }
 
-  getListType($pressedBtn) {
-    return $pressedBtn.closest('section').attr('id') === 'completed_items';
+  getListType(parentId) {
+    return parentId.includes('completed');
   }
   
   loadTodoList(listObj) {
     let listName = Object.keys(listObj)[0];
-    this.$todoListContainer.html(this.todoListTemplate({listTitle: listName, todos: listObj[listName]}));
+    this.$todoListContainer.html(
+      this.todoListTemplate({listTitle: listName, todos: listObj[listName]})
+    );
   }
 
   updateItemCounts() {
@@ -160,15 +162,17 @@ export class TodoView {
 
   loadAllCompletedTodosDates() {
     this.$allDoneHeader.html(this.sidebarHeader({ listName: 'Completed' }));
-    this.$completedDateListContainer.html(this.sidebarList({ dateGroups: this.todos.getCompletedGroups()}));
+    this.$doneListContainer.html(
+      this.sidebarList({ dateGroups: this.todos.getCompletedGroups()})
+    );
   }
 
   updateAllItemCount() {
-    this.updateItemCount(this.$allTodosBtn, this.todos.getList('all'));
+    this.updateItemCount(this.$allTodosBtn, this.todos.getList('All Todos'));
   }
 
   updateCompletedItemCount() {
-    this.updateItemCount(this.$allCompletedBtn, this.todos.getList('all', true));
+    this.updateItemCount(this.$allCompletedBtn, this.todos.getList('Completed', true));
   }
 
   updateItemCount($containingElement, todoList) {
@@ -220,6 +224,6 @@ export class TodoView {
   }
 
   updateCompletedListCounts() {
-    this.updateListCount(this.$completedDateListContainer, this.todos.completedTodoGroups);
+    this.updateListCount(this.$doneListContainer, this.todos.completedTodoGroups);
   }
 }

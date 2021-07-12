@@ -21,14 +21,13 @@ export class Todos {
   }
 
   getList(listName, completed = false) {
-    let list;
-    if (completed) {
-      list = this.completedTodoGroups[listName];
-      return (list) ? list : this.completedTodos;
-    } else {
-      list = this.allTodoGroups[listName];
-      return (list) ? list : this.todos;
-    }
+    if (listName === 'Completed') return this.completedTodos;
+    if (listName === 'All Todos') return this.todos;
+
+    let list = (completed)
+      ? this.completedTodoGroups[listName] : this.allTodoGroups[listName];
+
+    return list ? list : [];
   }
 
   get(id) {
@@ -56,9 +55,9 @@ export class Todos {
   }
 
   _sortDateKeys(todos) {
-    return Object.keys(todos).sort((a, b) => getNumericValue(a) - getNumericValue(b));
+    return Object.keys(todos).sort((a, b) => getNumericVal(a) - getNumericVal(b));
 
-    function getNumericValue(key) {
+    function getNumericVal(key) {
       return +key.split('/').reverse().join('') || 0;
     }
   }
