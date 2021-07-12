@@ -10,6 +10,8 @@ export class App {
 
     this.loadPage();
     this.addListeners();
+
+    this.api.delete(69);
   }
 
   async renderPage(viewFunc) {
@@ -38,7 +40,8 @@ export class App {
       e.preventDefault();
       let $btn = $(e.target);
       if (this.isNewTodoBtn($btn)) return this.view.loadTodoForm();
-      
+      if (this.isHamburgerBtn($btn)) return $('#sidebar').toggle();
+      if (this.isEditItemBtn($btn)) return this.editSelectedItem($btn);
       
       if (this.itemsListenersActive) {
         this.itemsListenersActive = false;
@@ -49,12 +52,13 @@ export class App {
             break;
           case (this.isDeleteItemBtn($btn)):
             this.deleteSelectedTodo($btn);
-            break;
-          case (this.isEditItemBtn($btn)):
-            this.editSelectedItem($btn);
         }
       }
     });
+  }
+
+  isHamburgerBtn($btn) {
+    return $btn.closest('[for="sidebar_toggle"]').length !== 0;
   }
 
   isEditItemBtn($btn) {
@@ -112,8 +116,8 @@ export class App {
       e.stopPropagation();
       let $btn = $(e.target);
 
-      this.checkForSaveClick($btn);
-      this.checkForCompletedClick($btn);
+      if (this.checkForSaveClick($btn)) return this.submitTodo();
+      if (this.checkForCompletedClick($btn)) return this.submitAsCompleted($btn);
     });
 
     $('#modal_layer').on('click', e => {
@@ -129,18 +133,20 @@ export class App {
   }
 
   checkForSaveClick($btn) {
-    if ($btn.attr('type') === 'submit') this.submitTodo();
+    return $btn.attr('type') === 'submit';
   }
 
   checkForCompletedClick($btn) {
-    if ($btn.prop('tagName') === 'BUTTON') {
-      if ($('#id').attr('value')) {
-        $btn.attr('disabled',true);
-        $('#completed').attr('value', 'true');
-        this.submitTodo();
-      } else {
-        alert('Cannot mark as complete as item has not been created yet!');
-      }
+    return $btn.prop('tagName') === 'BUTTON';
+  }
+
+  submitAsCompleted($btn) {
+    if ($('#id').attr('value')) {
+      $btn.attr('disabled', true);
+      $('#completed').attr('value', 'true');
+      this.submitTodo();
+    } else {
+      alert('Cannot mark as complete as item has not been created yet!');
     }
   }
 
@@ -149,10 +155,11 @@ export class App {
     let data = new FormData(form);
 
     if (Todos.isValidTodo(data)) {
-      this.api.submit(form.getAttribute('method'), data)
+      let method = form.getAttribute('method').toUpperCase();
+      this.api.submit(method, data)
       .then(() => {
         this.view.hideModal();
-        this.loadPage();
+        (method === 'POST') ? this.loadPage() : this.refreshPage();
       });
     } else alert('You must enter a title at least 3 characters long.');
   }

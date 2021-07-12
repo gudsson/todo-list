@@ -25,6 +25,10 @@ export class TodoView {
   }
 
   registerHandlebarsHelpers() {
+    Handlebars.registerHelper('getDueDate', todo => {
+      return (todo.month && todo.year) ? `${todo.month}/${todo.year.slice(2)}` : `No Due Date`;
+    });
+
     Handlebars.registerHelper('dayOptions', day => {
       let options = [];
 
@@ -217,19 +221,5 @@ export class TodoView {
 
   updateCompletedListCounts() {
     this.updateListCount(this.$completedDateListContainer, this.todos.completedTodoGroups);
-  }
-
-  groupTodosByDate(todos) {
-    let todoGroups = {};
-
-    todos.forEach(todo => {
-      let date = (todo.month && todo.year) ? `${todo.month}/${todo.year.slice(2)}` : 'No Due Date';
-
-      if (!todoGroups[date]) {
-        todoGroups[date] = [todo];
-      } else todoGroups[date].push(todo);
-    });
-
-    return todoGroups;
   }
 }

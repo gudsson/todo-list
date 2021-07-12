@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheets/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!-- <script src="javascripts/todo_v3.js"></script> -->
     <script src="javascripts/handlebars.js"></script>
   </head>
 
@@ -32,28 +31,28 @@
   </body>
 
   <!-- Handlebars Templates -->
-  <!-- Modal Templates (TODO: Refactor) -->
+
+  <!-- Dropdown Partials -->
   <script id='dayOptions' type='text/x-handlebars'>
     <option value="">Day</option>
     {{#each (dayOptions day)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}
   </script>
-
   <script id='monthOptions' type='text/x-handlebars'>
     <option value="">Month</option>
     {{#each (monthOptions month)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}
   </script>
-
   <script id='yearOptions' type='text/x-handlebars'>
     <option value="">Year</option>
     {{#each (yearOptions year)}}
     <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
     {{/each}}
   </script>
-  
+
+  <!-- Modal Template -->
   <script id='modalForm' type='text/x-handlebars'>
     <form action="" method="{{#if id}}put{{else}}post{{/if}}">
       <fieldset>
@@ -97,7 +96,6 @@
       <dt>{{listName}}</dt><dd></dd>
     </dl>
   </script>
-
   <script id='sidebarList' type='text/x-handlebars'>
     {{#each dateGroups}}
     <dl data-title="{{this}}" data-total="">
@@ -124,7 +122,6 @@
       </table>
     </main>
   </script>
-
   <script id='todoListHeader' type='text/x-handlebars'>
     <header>
       <label for="sidebar_toggle">
@@ -135,13 +132,12 @@
       </dl>
     </header>
   </script>
-
-  <script id='todoTemplate' type='text/x-handlebars'>
+  <script id='todoTemplate' type='text/x-handlebars' data-type="partial">
     <tr data-id="{{id}}">
       <td class="list_item">
       <input type="checkbox" name="item_{{id}}" id="item_{{id}}" {{#if completed}}checked{{/if}}>
       <span class="check"></span>
-      <label for="item_{{id}}">{{title}}</label></td>
+      <label for="item_{{id}}">{{title}} - {{getDueDate this}}</label></td>
       <td class="delete"><img src="images/trash.png" alt="Delete"></td>
     </tr>
   </script>
